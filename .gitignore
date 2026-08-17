@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+data/projects/
+*.local.json
+
+# Android build artifacts (SDK/Gradle toolchain lives outside the repo)
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.apk
+*.aab
+.gradle/

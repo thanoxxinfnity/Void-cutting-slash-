@@ -1,0 +1,14 @@
+{
+  "nvidia_api_key": "",
+  "vercel_token": "",
+  "cloud_terminal_url": "",
+  "models": {
+    "fast_chat": "meta/llama-3.1-8b-instruct",
+    "generator": "deepseek-ai/deepseek-v4-flash-0731",
+    "auditor": "z-ai/glm-5.2",
+    "deep_reasoner": "nvidia/nemotron-3-ultra-550b-a55b",
+    "syntax_verifier": "meta/llama-3.1-8b-instruct",
+    "safety_net": "z-ai/glm-5.2"
+  },
+  "max_audit_loops": 3
+}

@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.VoidCuttingSlash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#B026FF</item>
+        <item name="colorPrimaryDark">#0A0A0F</item>
+        <item name="colorAccent">#26E5FF</item>
+        <item name="android:windowBackground">#0A0A0F</item>
+        <item name="android:statusBarColor" tools:targetApi="l">#0A0A0F</item>
+    </style>
+</resources>

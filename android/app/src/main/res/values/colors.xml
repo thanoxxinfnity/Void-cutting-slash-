@@ -1,0 +1,5 @@
+<resources>
+    <color name="void_bg">#0A0A0F</color>
+    <color name="void_accent">#B026FF</color>
+    <color name="void_accent_2">#26E5FF</color>
+</resources>

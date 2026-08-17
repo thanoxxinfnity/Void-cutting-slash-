@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Void Cutting Slash</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">⌁</span>
+        <span class="brand-name">VOID CUTTING SLASH</span>
+      </div>
+      <button id="new-chat-btn" class="new-chat-btn">+ New Session</button>
+      <div class="history-label">History</div>
+      <div id="history-list" class="history-list"></div>
+      <button id="settings-btn" class="settings-btn">⚙ Settings</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mode-toggle" id="mode-toggle">
+          <button class="mode-btn active" data-mode="">Auto</button>
+          <button class="mode-btn" data-mode="fast">Fast Chat</button>
+          <button class="mode-btn" data-mode="heavy">Heavy Swarm</button>
+        </div>
+        <div id="intent-badge" class="intent-badge"></div>
+      </header>
+
+      <section id="chat-window" class="chat-window">
+        <div class="welcome">
+          <h1>Void Cutting Slash</h1>
+          <p>Ask a question for instant chat, or describe something to build
+             ("create a REST API for...", "fix this bug...") to trigger the
+             5-tier swarm: <b>Generator → Auditor → Deep Reasoner → Syntax
+             Verifier → Safety Net</b>.</p>
+        </div>
+      </section>
+
+      <form id="chat-form" class="chat-form">
+        <textarea id="chat-input" placeholder="Describe what to build, or just chat..." rows="2"></textarea>
+        <button type="submit" id="send-btn">Send</button>
+      </form>
+    </main>
+  </div>
+
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings — BYOK</h2>
+        <button id="close-settings" class="icon-btn">✕</button>
+      </div>
+      <label>NVIDIA API Key
+        <input id="nvidia-key" type="password" placeholder="nvapi-..." autocomplete="off" />
+      </label>
+      <label>Vercel Token
+        <input id="vercel-token" type="password" placeholder="Vercel personal token" autocomplete="off" />
+      </label>
+      <label>Cloud Terminal URL
+        <input id="cloud-terminal-url" type="text" placeholder="https://..." autocomplete="off" />
+      </label>
+      <div id="settings-status" class="settings-status"></div>
+      <button id="save-settings" class="save-btn">Save & Verify</button>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Void Cutting Slash</string>
+    <string name="menu_set_url">Set Backend URL</string>
+    <string name="menu_reload">Reload</string>
+    <string name="dialog_url_title">Backend URL</string>
+    <string name="dialog_url_hint">https://your-deployed-dashboard.example.com</string>
+    <string name="dialog_url_positive">Connect</string>
+    <string name="dialog_url_negative">Cancel</string>
+    <string name="no_url_message">No backend URL set yet. Tap the menu to enter your Void Cutting Slash dashboard URL (the FastAPI server from this repo, deployed or reachable on your network).</string>
+</resources>
