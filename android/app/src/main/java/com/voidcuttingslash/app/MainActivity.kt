@@ -54,11 +54,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         val savedUrl = prefs.getString(KEY_BACKEND_URL, null)
-        if (savedUrl.isNullOrBlank()) {
-            showEmptyState()
-            promptForUrl(initial = true)
-        } else {
-            loadBackend(savedUrl)
+        val bakedInUrl = getString(R.string.default_backend_url)
+        when {
+            !savedUrl.isNullOrBlank() -> loadBackend(savedUrl)
+            bakedInUrl.isNotBlank() -> {
+                // This build was compiled by cloud_terminal/server.py's /build-apk with a
+                // known deployment URL baked in — skip the manual prompt entirely.
+                prefs.edit().putString(KEY_BACKEND_URL, bakedInUrl).apply()
+                loadBackend(bakedInUrl)
+            }
+            else -> {
+                showEmptyState()
+                promptForUrl(initial = true)
+            }
         }
     }
 

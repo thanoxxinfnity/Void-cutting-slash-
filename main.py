@@ -4,20 +4,23 @@ Serves the dashboard, routes chat messages between the fast_chat engine and
 the heavy 5-tier swarm cascade, manages BYOK settings, exposes project
 history, and triggers Vercel deployments of swarm output.
 """
+import io
 import json
 import os
+import zipfile
 from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from agents import fast_chat, router, vercel_deployer
+from agents import fast_chat, router, terminal_executor, vercel_deployer
 from agents.nvidia_client import NvidiaAPIError, list_models
 from agents.swarm_engine import load_project, run_swarm, set_project_vercel_url
+from agents.terminal_executor import TerminalError
 from agents.vercel_deployer import VercelDeployError
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -102,6 +105,17 @@ class DeployIn(BaseModel):
     project_name: Optional[str] = None
 
 
+class ExecuteIn(BaseModel):
+    project_id: str
+    entrypoint: str
+    language: str = "python"
+
+
+class BuildApkIn(BaseModel):
+    project_id: Optional[str] = None
+    app_name: Optional[str] = None
+
+
 @app.get("/")
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -127,6 +141,16 @@ async def update_settings(body: SettingsIn):
         except NvidiaAPIError as exc:
             raise HTTPException(status_code=400, detail=f"NVIDIA key rejected: {exc}") from exc
 
+    terminal_status = None
+    if "cloud_terminal_url" in data and data["cloud_terminal_url"]:
+        try:
+            terminal_status = terminal_executor.check_health(data["cloud_terminal_url"])
+            terminal_status["connected"] = True
+        except TerminalError as exc:
+            # Not fatal — save the URL anyway, the terminal might just be offline
+            # right now, and the UI shows the disconnected state either way.
+            terminal_status = {"connected": False, "error": str(exc)}
+
     for field in ("nvidia_api_key", "vercel_token", "cloud_terminal_url", "max_audit_loops"):
         if data.get(field) is not None:
             settings[field] = data[field]
@@ -138,7 +162,22 @@ async def update_settings(body: SettingsIn):
             "vercel_token": _mask(settings["vercel_token"])}
     if verified:
         resp["nvidia_key_verified"] = verified
+    if terminal_status:
+        resp["terminal_status"] = terminal_status
     return resp
+
+
+@app.get("/api/terminal/status")
+async def terminal_status():
+    settings = load_settings()
+    url = settings.get("cloud_terminal_url")
+    if not url:
+        return {"connected": False, "error": "No Cloud Terminal URL configured."}
+    try:
+        health = terminal_executor.check_health(url)
+        return {"connected": True, **health}
+    except TerminalError as exc:
+        return {"connected": False, "error": str(exc)}
 
 
 @app.get("/api/history")
@@ -178,9 +217,6 @@ async def chat(body: ChatIn):
                     yield event("token", {"token": token})
                 yield event("done", {"mode": "fast"})
             else:
-                def on_tier_event(e):
-                    pass  # collected via generator below; SSE needs synchronous yields
-
                 # run_swarm is synchronous; we drive it tier-by-tier and push
                 # each progress event out over SSE as it happens.
                 events = []
@@ -220,6 +256,75 @@ async def deploy(body: DeployIn):
     if result.get("url"):
         set_project_vercel_url(body.project_id, result["url"])
     return result
+
+
+@app.get("/api/history/{project_id}/zip")
+async def download_zip(project_id: str):
+    project = load_project(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path, content in project["files"].items():
+            zf.writestr(path, content)
+    buffer.seek(0)
+
+    return Response(
+        content=buffer.getvalue(),
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{project_id}.zip"'},
+    )
+
+
+@app.post("/api/execute")
+async def execute_project(body: ExecuteIn):
+    settings = load_settings()
+    if not settings.get("cloud_terminal_url"):
+        raise HTTPException(
+            status_code=400,
+            detail="No Cloud Terminal connected. Connect one in Settings to run real code.",
+        )
+    project = load_project(body.project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    try:
+        result = terminal_executor.execute_code(
+            settings["cloud_terminal_url"], project["files"], body.entrypoint, body.language,
+        )
+    except TerminalError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    return result
+
+
+@app.post("/api/build-apk")
+async def build_apk_route(body: BuildApkIn):
+    settings = load_settings()
+    if not settings.get("cloud_terminal_url"):
+        raise HTTPException(
+            status_code=400,
+            detail="No Cloud Terminal connected. Connect one in Settings to build a real APK.",
+        )
+
+    backend_url = None
+    app_name = body.app_name or "Void Cutting Slash App"
+    if body.project_id:
+        project = load_project(body.project_id)
+        if not project:
+            raise HTTPException(status_code=404, detail="Project not found")
+        backend_url = project.get("vercel_url")
+
+    try:
+        apk_bytes = terminal_executor.build_apk(settings["cloud_terminal_url"], backend_url, app_name)
+    except TerminalError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    return Response(
+        content=apk_bytes,
+        media_type="application/vnd.android.package-archive",
+        headers={"Content-Disposition": 'attachment; filename="void-cutting-slash.apk"'},
+    )
 
 
 if __name__ == "__main__":

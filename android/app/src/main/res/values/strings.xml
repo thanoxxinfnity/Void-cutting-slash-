@@ -7,4 +7,7 @@
     <string name="dialog_url_positive">Connect</string>
     <string name="dialog_url_negative">Cancel</string>
     <string name="no_url_message">No backend URL set yet. Tap the menu to enter your Void Cutting Slash dashboard URL (the FastAPI server from this repo, deployed or reachable on your network).</string>
+    <!-- Overwritten by cloud_terminal/server.py's /build-apk before compiling, so a
+         swarm-built APK can ship pre-pointed at the deployment that requested it. -->
+    <string name="default_backend_url"></string>
 </resources>
