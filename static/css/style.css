@@ -60,7 +60,7 @@ html, body {
   padding: 6px 4px 10px;
   white-space: nowrap;
 }
-.brand-mark { color: var(--accent); font-size: 1.1rem; }
+.brand-mark { flex-shrink: 0; border-radius: 7px; }
 
 .btn {
   border: 1px solid var(--border);
@@ -165,13 +165,21 @@ html, body {
 }
 
 .welcome { max-width: 620px; margin: 60px auto; text-align: center; color: var(--text-dim); }
-.welcome-mark { font-size: 2rem; color: var(--accent); margin-bottom: 10px; }
-.welcome h1 { color: var(--text); font-size: 1.7rem; font-weight: 600; margin: 0 0 12px; }
+.welcome-mark { border-radius: 12px; margin-bottom: 14px; }
+.welcome h1 { color: var(--text); font-size: 2rem; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+.welcome-tagline { color: var(--text-dim); font-size: 0.88rem; font-weight: 500; margin: 0 0 18px; }
 .welcome p { line-height: 1.6; font-size: 0.92rem; }
 .welcome b { color: var(--text); }
 
-.msg-row { max-width: 720px; width: 100%; margin: 0 auto; display: flex; }
-.msg-row.user { justify-content: flex-end; }
+.msg-row { max-width: 720px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; }
+.msg-row.user { align-items: flex-end; }
+.msg-row.assistant { align-items: flex-start; }
+.msg-author {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.74rem; font-weight: 600; color: var(--text-dim);
+  margin-bottom: 5px; padding-left: 2px;
+}
+.msg-author svg { border-radius: 5px; }
 .msg {
   max-width: 82%;
   padding: 11px 15px;
@@ -216,10 +224,8 @@ html, body {
 }
 .artifact-card:hover { border-color: var(--accent); }
 .artifact-card .icon {
-  width: 34px; height: 34px; border-radius: 8px;
-  background: var(--accent-soft); color: var(--accent);
+  width: 34px; height: 34px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  font-size: 1rem;
 }
 .artifact-card .meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .artifact-card .meta .name { font-size: 0.86rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

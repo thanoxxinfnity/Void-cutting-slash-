@@ -19,6 +19,15 @@ let currentProject = null; // { id, files, vercel_url }
 let activeFilePath = null;
 let terminalConnected = false;
 
+const LOGO_SVG = `<svg width="16" height="16" viewBox="0 0 32 32">
+  <defs><linearGradient id="msgGrad" x1="0" y1="0" x2="32" y2="32">
+    <stop stop-color="#8b6fdc"/><stop offset="1" stop-color="#4fd1c5"/>
+  </linearGradient></defs>
+  <rect width="32" height="32" rx="9" fill="url(#msgGrad)"/>
+  <circle cx="16" cy="16" r="8" fill="none" stroke="white" stroke-width="2.4"/>
+  <path d="M10 10 L22 22" stroke="white" stroke-width="2.6" stroke-linecap="round"/>
+</svg>`;
+
 function escapeHtml(str) {
   return str.replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -48,7 +57,7 @@ function appendAssistantMessage() {
   clearWelcome();
   const row = document.createElement("div");
   row.className = "msg-row assistant";
-  row.innerHTML = `<div class="msg"></div>`;
+  row.innerHTML = `<div class="msg-author">${LOGO_SVG}<span>ChomU</span></div><div class="msg"></div>`;
   chatWindow.appendChild(row);
   scrollToBottom();
   return row.querySelector(".msg");
@@ -97,7 +106,7 @@ function appendArtifactCard(id, fileCount) {
   const card = document.createElement("div");
   card.className = "artifact-card";
   card.innerHTML = `
-    <div class="icon">◆</div>
+    <div class="icon">${LOGO_SVG.replace('width="16" height="16"', 'width="22" height="22"')}</div>
     <div class="meta">
       <div class="name">Generated project</div>
       <div class="sub">${fileCount} file${fileCount === 1 ? "" : "s"} — click to open canvas</div>
@@ -399,8 +408,9 @@ document.getElementById("new-chat-btn").addEventListener("click", () => {
   intentBadge.textContent = "";
   chatWindow.innerHTML = `
     <div class="welcome">
-      <div class="welcome-mark">◆</div>
-      <h1>Void Cutting Slash</h1>
+      ${LOGO_SVG.replace('width="16" height="16"', 'width="52" height="52"').replace("<svg ", '<svg class="welcome-mark" ')}
+      <h1>ChomU</h1>
+      <p class="welcome-tagline">Your AI website &amp; APK builder — by Void Cutting Slash</p>
       <p>New session started.</p>
     </div>`;
 });

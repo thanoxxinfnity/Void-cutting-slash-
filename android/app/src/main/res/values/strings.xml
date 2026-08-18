@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Void Cutting Slash</string>
+    <string name="app_name">ChomU</string>
     <string name="menu_set_url">Set Backend URL</string>
     <string name="menu_reload">Reload</string>
     <string name="dialog_url_title">Backend URL</string>

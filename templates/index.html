@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Void Cutting Slash</title>
+  <title>Void Cutting Slash — ChomU AI Builder</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='32' y2='32'%3E%3Cstop stop-color='%238b6fdc'/%3E%3Cstop offset='1' stop-color='%234fd1c5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='white' stroke-width='2'/%3E%3Cpath d='M10 10 L22 22' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -14,7 +15,14 @@
   <div class="app" id="app">
     <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <span class="brand-mark">◆</span>
+        <svg class="brand-mark" width="22" height="22" viewBox="0 0 32 32">
+          <defs><linearGradient id="brandGrad" x1="0" y1="0" x2="32" y2="32">
+            <stop stop-color="#8b6fdc"/><stop offset="1" stop-color="#4fd1c5"/>
+          </linearGradient></defs>
+          <rect width="32" height="32" rx="9" fill="url(#brandGrad)"/>
+          <circle cx="16" cy="16" r="8" fill="none" stroke="white" stroke-width="2"/>
+          <path d="M10 10 L22 22" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
         <span class="brand-name">Void Cutting Slash</span>
       </div>
 
@@ -48,17 +56,26 @@
 
       <section id="chat-window" class="chat-window">
         <div class="welcome">
-          <div class="welcome-mark">◆</div>
-          <h1>Void Cutting Slash</h1>
-          <p>Ask a question for instant chat, or describe something to build
-             to trigger the 5-tier swarm — <b>Generator → Auditor → Deep
-             Reasoner → Syntax Verifier → Safety Net</b> — and get a real,
-             testable, deployable project in the canvas.</p>
+          <svg class="welcome-mark" width="52" height="52" viewBox="0 0 32 32">
+            <defs><linearGradient id="welcomeGrad" x1="0" y1="0" x2="32" y2="32">
+              <stop stop-color="#8b6fdc"/><stop offset="1" stop-color="#4fd1c5"/>
+            </linearGradient></defs>
+            <rect width="32" height="32" rx="9" fill="url(#welcomeGrad)"/>
+            <circle cx="16" cy="16" r="8" fill="none" stroke="white" stroke-width="2"/>
+            <path d="M10 10 L22 22" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+          <h1>ChomU</h1>
+          <p class="welcome-tagline">Your AI website &amp; APK builder — by Void Cutting Slash</p>
+          <p>Ask a question for instant chat, or describe a site, app, or script
+             to build. Real requests trigger the 5-tier swarm — <b>Generator →
+             Auditor → Deep Reasoner → Syntax Verifier → Safety Net</b> — and
+             land in the canvas as a real, testable, one-click-deployable
+             project — even a real Android APK.</p>
         </div>
       </section>
 
       <form id="chat-form" class="chat-form">
-        <textarea id="chat-input" placeholder="Message Void Cutting Slash..." rows="1"></textarea>
+        <textarea id="chat-input" placeholder="Message ChomU..." rows="1"></textarea>
         <button type="submit" id="send-btn" class="icon-btn icon-btn--send" title="Send">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 15L15 3M15 3H7M15 3v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
